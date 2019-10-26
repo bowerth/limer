@@ -29,7 +29,7 @@ call_limer <- function(method, params = list(), ...) {
 
   body.json <- list(method = method,
                     # This seems to not matter, but the API call breaks without it,
-                    # so just pass nothing. ¯\_(ツ)_/¯
+                    # so just pass nothing.
                     id = " ",
                     params = params.full)
 

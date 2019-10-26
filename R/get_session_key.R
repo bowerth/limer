@@ -5,6 +5,8 @@
 #' @param password LimeSurvey password Defaults to value set in \code{options()}.
 #' @return API token
 #' @import httr
+#' @importFrom magrittr %>%
+#' @importFrom stringr str_extract
 #' @export
 #' @examples \dontrun{
 #' get_session_key()
@@ -26,7 +28,14 @@ get_session_key <- function(username = getOption('lime_username'),
   r <- POST(getOption('lime_api'), content_type_json(),
             body = jsonlite::toJSON(body.json, auto_unbox = TRUE))
 
-  session_key <- as.character(jsonlite::fromJSON(content(r, encoding="utf-8"))$result)
+  ## session_key <- as.character(jsonlite::fromJSON(content(r, encoding="utf-8"))$result)
+  ## OECD SAML adds html to JSON result
+  session_key <- httr::content(r, encoding = "utf-8") %>%
+      stringr::str_extract(pattern = "[{].+$") %>%
+      jsonlite::fromJSON() %>%
+      .[["result"]] %>%
+      as.character()
+
   session_cache$session_key <- session_key
   session_key
 }
