@@ -28,8 +28,13 @@ get_session_key <- function(username = getOption('lime_username'),
   r <- POST(getOption('lime_api'), content_type_json(),
             body = jsonlite::toJSON(body.json, auto_unbox = TRUE))
 
+  ## deactivate SSL certificate validation:
+  ##   httr::set_config(httr::config(ssl_verifypeer = 0L))
+  ## in curl "-k" flag
+  ##   curl -k -X POST -H "Content-Type: application/json" -d "{\"method\":\"get_session_key\",\"id\":\" \",\"params\":{\"admin\":\"$LIME_USER\",\"password\":\"$LIME_PASS\"}}" $LIME_API
+
   ## session_key <- as.character(jsonlite::fromJSON(content(r, encoding="utf-8"))$result)
-  ## OECD SAML adds html to JSON result
+  ## SAML adds html to JSON result
   session_key <- httr::content(r, encoding = "utf-8") %>%
       stringr::str_extract(pattern = "[{].+$") %>%
       jsonlite::fromJSON() %>%

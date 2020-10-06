@@ -2,10 +2,13 @@
 
 export(base64_to_df)
 export(call_limer)
+export(get_participant_property)
 export(get_participants)
 export(get_responses)
 export(get_session_key)
 export(mail_registered_participant)
 export(release_session_key)
 import(httr)
+importFrom(magrittr,"%>%")
+importFrom(stringr,str_extract)
 importFrom(utils,read.csv)
